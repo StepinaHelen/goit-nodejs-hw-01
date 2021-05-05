@@ -7,26 +7,20 @@ const contactsPath = path.join(__dirname, "db/contacts.json");
 // дополнительная функция
 async function getContacts() {
   try {
-    const response = await fs.readFile(contactsPath, (err) => {
-      if (err) return console.log(err.message);
-    });
+    const response = await fs.readFile(contactsPath);
     let contacts = JSON.parse(response);
     return contacts;
   } catch (err) {
-    console.error(err.message);
+    console.error(err);
   }
 }
 
 async function listContacts() {
   try {
-    const response = await fs.readFile(contactsPath, (err) => {
-      if (err) return console.log(err.message);
-    });
-
-    let contacts = JSON.parse(response);
+    const contacts = await getContacts();
     console.table(contacts);
-  } catch (err) {
-    console.error(err.message);
+  } catch (error) {
+    console.error(error);
   }
 }
 // listContacts();
@@ -35,8 +29,8 @@ async function getContactById(contactId) {
     const contacts = await getContacts();
     const findContact = contacts.find(({ id }) => id === contactId);
     console.table(findContact);
-  } catch (e) {
-    console.error(e.message);
+  } catch (error) {
+    console.error(error);
   }
 }
 // getContactById(3);
@@ -46,11 +40,9 @@ async function removeContact(contactId) {
     let deleteContact = contacts.filter(({ id }) => id !== contactId);
     console.table(deleteContact);
 
-    fs.writeFile(contactsPath, JSON.stringify(deleteContact), (err) => {
-      if (err) return console.log(err.message);
-    });
-  } catch (e) {
-    console.error(e.message);
+    fs.writeFile(contactsPath, JSON.stringify(deleteContact, null, 2));
+  } catch (error) {
+    console.error(error);
   }
 }
 // removeContact(8);
@@ -65,11 +57,9 @@ async function addContact(name, email, phone) {
     };
     const newContact = [...contacts, contact];
     console.table(newContact);
-    fs.writeFile(contactsPath, JSON.stringify(newContact), (err) => {
-      if (err) return console.log(err.message);
-    });
-  } catch (e) {
-    console.error(e.message);
+    fs.writeFile(contactsPath, JSON.stringify(newContact, null, 2));
+  } catch (error) {
+    console.error(error);
   }
 }
 // addContact("Lena", "email", "66644422");
